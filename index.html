@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="tr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>bir soru var 🎾</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Quicksand:wght@400;500;600&display=swap');
+
+        :root {
+            --cream: #fdf6f3;
+            --blush: #f6d9d6;
+            --rose: #d98a92;
+            --rose-deep: #b8636f;
+            --gold: #cf9d5f;
+            --ink: #4a3b3d;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background:
+                radial-gradient(circle at 20% 20%, #ffffff 0%, transparent 45%),
+                radial-gradient(circle at 80% 85%, var(--blush) 0%, transparent 50%),
+                var(--cream);
+            font-family: 'Quicksand', sans-serif;
+            color: var(--ink);
+            overflow: hidden;
+            position: relative;
+        }
+
+        /* floating soft dots, like tennis balls blurred into bokeh */
+        .bokeh {
+            position: absolute;
+            border-radius: 50%;
+            background: radial-gradient(circle at 35% 35%, #eef7d6, #cfe3a0 60%, #b9d488);
+            opacity: 0.35;
+            filter: blur(1px);
+            animation: float 9s ease-in-out infinite;
+        }
+
+        .bokeh:nth-child(1) {
+            width: 70px;
+            height: 70px;
+            top: 10%;
+            left: 8%;
+            animation-delay: 0s;
+        }
+
+        .bokeh:nth-child(2) {
+            width: 40px;
+            height: 40px;
+            top: 75%;
+            left: 15%;
+            animation-delay: 1.5s;
+        }
+
+        .bokeh:nth-child(3) {
+            width: 55px;
+            height: 55px;
+            top: 20%;
+            left: 85%;
+            animation-delay: 0.7s;
+        }
+
+        .bokeh:nth-child(4) {
+            width: 30px;
+            height: 30px;
+            top: 65%;
+            left: 90%;
+            animation-delay: 2.2s;
+        }
+
+        .bokeh:nth-child(5) {
+            width: 25px;
+            height: 25px;
+            top: 50%;
+            left: 5%;
+            animation-delay: 3s;
+        }
+
+        @keyframes float {
+
+            0%,
+            100% {
+                transform: translateY(0) translateX(0);
+            }
+
+            50% {
+                transform: translateY(-18px) translateX(8px);
+            }
+        }
+
+        .card {
+            position: relative;
+            z-index: 2;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(14px);
+            border: 1px solid rgba(255, 255, 255, 0.7);
+            border-radius: 28px;
+            padding: 56px 44px;
+            max-width: 480px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 30px 60px -20px rgba(184, 99, 111, 0.25);
+        }
+
+        .eyebrow {
+            font-size: 0.72rem;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            color: var(--rose-deep);
+            margin-bottom: 14px;
+            font-weight: 600;
+        }
+
+        h1 {
+            font-family: 'Cormorant Garamond', serif;
+            font-weight: 600;
+            font-size: clamp(1.6rem, 4vw, 2.3rem);
+            line-height: 1.35;
+            margin: 0 0 40px 0;
+            color: var(--ink);
+        }
+
+        .buttons {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 18px;
+            flex-wrap: wrap;
+            min-height: 90px;
+        }
+
+        button {
+            border: none;
+            cursor: pointer;
+            font-family: 'Quicksand', sans-serif;
+            font-weight: 600;
+            border-radius: 999px;
+            transition: all 0.28s cubic-bezier(.34, 1.56, .64, 1);
+            box-shadow: 0 8px 20px -8px rgba(0, 0, 0, 0.15);
+        }
+
+        #si {
+            background: linear-gradient(135deg, var(--rose) 0%, var(--rose-deep) 100%);
+            color: #fff;
+            font-size: 1.05rem;
+            padding: 16px 34px;
+            letter-spacing: 0.02em;
+        }
+
+        #si:hover {
+            transform: translateY(-2px) scale(1.03);
+            box-shadow: 0 12px 24px -8px rgba(184, 99, 111, 0.45);
+        }
+
+        #no {
+            background: transparent;
+            color: var(--ink);
+            border: 1.5px solid rgba(74, 59, 61, 0.25);
+            font-size: 0.95rem;
+            padding: 13px 24px;
+        }
+
+        #no:hover {
+            background: rgba(74, 59, 61, 0.05);
+        }
+
+        .hint {
+            margin-top: 26px;
+            font-size: 0.78rem;
+            color: rgba(74, 59, 61, 0.5);
+            min-height: 16px;
+            transition: opacity 0.3s;
+        }
+
+        /* overlay */
+        .overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(74, 59, 61, 0.35);
+            backdrop-filter: blur(6px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+        }
+
+        .overlay.show {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .popup {
+            background: linear-gradient(160deg, #fff 0%, var(--blush) 130%);
+            border-radius: 24px;
+            padding: 48px 40px;
+            max-width: 380px;
+            width: 88%;
+            text-align: center;
+            transform: scale(0.85) translateY(10px);
+            transition: transform 0.4s cubic-bezier(.34, 1.56, .64, 1);
+            box-shadow: 0 40px 80px -20px rgba(184, 99, 111, 0.4);
+        }
+
+        .overlay.show .popup {
+            transform: scale(1) translateY(0);
+        }
+
+        .popup .emoji {
+            font-size: 2.6rem;
+            margin-bottom: 6px;
+            display: block;
+        }
+
+        .popup p {
+            font-family: 'Cormorant Garamond', serif;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--rose-deep);
+            margin: 10px 0 22px 0;
+            line-height: 1.4;
+        }
+
+        .popup button {
+            background: var(--gold);
+            color: #fff;
+            padding: 12px 30px;
+            font-size: 0.9rem;
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+            .bokeh {
+                animation: none;
+            }
+
+            * {
+                transition-duration: 0.01ms !important;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="bokeh"></div>
+    <div class="bokeh"></div>
+    <div class="bokeh"></div>
+    <div class="bokeh"></div>
+    <div class="bokeh"></div>
+
+    <div class="card">
+        <div class="eyebrow">bir soru</div>
+        <h1>ders çalışman bittikten sonra<br>akşam tenis oynayalım mı? 🎾</h1>
+
+        <div class="buttons">
+            <button id="si">Si</button>
+            <button id="no">No</button>
+        </div>
+
+        <div class="hint" id="hint"></div>
+    </div>
+
+    <div class="overlay" id="overlay">
+        <div class="popup">
+            <span class="emoji">😘💋😘</span>
+            <p>evet diceğini biliyodum</p>
+            <button id="close">tamam ❤️</button>
+        </div>
+    </div>
+
+    <script>
+        const si = document.getElementById('si');
+        const no = document.getElementById('no');
+        const hint = document.getElementById('hint');
+        const overlay = document.getElementById('overlay');
+        const closeBtn = document.getElementById('close');
+
+        let noCount = 0;
+        const hints = [
+            "emin misin? 👀",
+            "bir daha düşün ✨",
+            "kalbim büyümeye devam ediyor 💗",
+            "pes etmiyorum 🎾",
+            "Si demek üzeresin gibi...",
+            "biraz daha büyüsün mü? 😌"
+        ];
+
+        no.addEventListener('click', () => {
+            noCount++;
+            const scale = 1 + noCount * 0.18;
+            si.style.transform = `scale(${scale})`;
+            si.style.fontSize = `${1.05 + noCount * 0.12}rem`;
+            hint.textContent = hints[(noCount - 1) % hints.length];
+        });
+
+        si.addEventListener('click', () => {
+            overlay.classList.add('show');
+        });
+
+        closeBtn.addEventListener('click', () => {
+            overlay.classList.remove('show');
+        });
+    </script>
+
+</body>
+
+</html>
